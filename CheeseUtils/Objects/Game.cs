@@ -19,6 +19,8 @@ namespace CheeseUtils
         public static bool IsKickoff { get; private set; }
         public static bool MatchEnded { get; private set; }
 
+        public static Vec3 Gravity { get; private set; }
+
         static Game()
         {
             Time = 0.0f;
@@ -27,6 +29,8 @@ namespace CheeseUtils
             IsRoundActive = false;
             IsKickoff = false;
             MatchEnded = false;
+
+            Gravity = new Vec3(0, 0, -650);
         }
 
         public static void Update(GameTickPacket packet)
@@ -37,6 +41,8 @@ namespace CheeseUtils
             IsRoundActive = packet.GameInfo.Value.IsRoundActive;
             IsKickoff = packet.GameInfo.Value.IsKickoffPause;
             MatchEnded = packet.GameInfo.Value.IsMatchEnded;
+
+            Gravity = new Vec3(0, 0, packet.GameInfo.Value.WorldGravityZ);
         }
     }
 }

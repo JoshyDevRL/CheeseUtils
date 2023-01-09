@@ -13,6 +13,8 @@ namespace CheeseUtils
 	{
 		public new ExtendedRenderer Renderer { get; internal set; }
 
+		public CUAction Action = null;
+
 		public Controller Controller = new Controller();
 
         public Car Me => Index < Cars.Count ? Cars.AllCars[Index] : new Car();
@@ -28,8 +30,10 @@ namespace CheeseUtils
 		public Goal TheirGoal => Field.Goals[1 - Team];
 
 		public bool IsKickoff { get; private set; }
+        public float DeltaTime { get; private set; }
 
-		public bool _initialized = false;
+        public bool _initialized = false;
+        private float _lastTime = 0;
 
         public CUBot(string botName, int botTeam, int botIndex) : base(botName, botTeam, botIndex)
 		{
@@ -62,13 +66,19 @@ namespace CheeseUtils
 
 			if (!IsKickoff && Game.IsRoundActive && Game.IsKickoff)
 			{
-				// RESET
+				Action = null;
 			}
 
 			IsKickoff = Game.IsRoundActive && Game.IsRoundActive;
 		}
 
-		public override Controller GetOutput(GameTickPacket packet)
+        private void UpdateDeltaTime()
+        {
+            DeltaTime = Game.Time - _lastTime;
+            _lastTime = Game.Time;
+        }
+
+        public override Controller GetOutput(GameTickPacket packet)
 		{
 			Controller = new Controller(); 
 
@@ -79,9 +89,29 @@ namespace CheeseUtils
 
 			UpdateInfo(packet);
 
-			Run(); 
+			Run();
 
-			return Controller; 
+            if (Action != null)
+            {
+                Action.Run(this);
+
+                if (Action.Finished || Action.Interruptible || Me.IsDemolished)
+                {
+                    if (Action.FollowUpAction != null && Action.Finished)
+					{
+						Action = Action.FollowUpAction;
+					}
+
+					else
+					{
+						Action = null;
+					}
+                }
+            }
+
+            UpdateDeltaTime();
+
+            return Controller; 
 		}
 
 		public abstract void Run();

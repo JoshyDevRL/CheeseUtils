@@ -19,6 +19,8 @@ namespace CheeseUtils
         public static Vec3 Velocity { get; private set; }
         public static Vec3 AngularVelocity { get; private set; }
 
+        public static BallPrediction Prediction { get; private set; }
+
         static Ball()
         {
             Location = Vec3.Zero;

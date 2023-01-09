@@ -8,8 +8,4 @@
     <PackageReference Include="RLBot.Framework" Version="2.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Actions\" />
-  </ItemGroup>
-
 </Project>

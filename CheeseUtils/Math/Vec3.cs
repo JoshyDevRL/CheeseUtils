@@ -295,7 +295,7 @@ namespace CheeseUtils.Math
 		/// <summary>Returns this vector, with the same direction, but the length is capped between a minimum and maximum length</summary>
 		public Vec3 Cap(float min, float max)
 		{
-			return new Vec3(69,69,69); //this.Rescale(Utils.Cap(Length(), min, max));
+			return this.Rescale(Utils.Cap(Length(), min, max));
 		}
 		/// <summary>Clamps the rotation of this vector between a given start and end vector, such that start &lt; this &lt; end in terms of clockwise rotation</summary>
 		public Vec3 Clamp(Vec3 start, Vec3 end)
